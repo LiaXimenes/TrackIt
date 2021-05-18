@@ -211,5 +211,83 @@ input{
     font-size: 20px;
     padding-top: 13px;
     padding-bottom: 10px;
+}
 
+
+.today{
+    padding-top: 28px;
+    margin-left: 18px;
+    padding-bottom: 28px;
+}
+
+.today h1{
+    font-size: 23px;
+    font-family: 'Lexend Deca', sans-serif;
+    color:#126BA5;
+}
+
+.today p{
+    font-size: 18px;
+    color: #bababa;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.today-habits{
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.a-habit{
+    width: 340px;
+    height: 94px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    background: #ffffff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.a-habit h1{
+    font-family: 'Lexend Deca', sans-serif;
+    color: #666666;
+    font-size: 20px;
+    padding-top: 13px;
+    padding-bottom: 10px;
+}
+
+.a-habit p{
+    font-size: 12px;
+    font-family: 'Lexend Deca', sans-serif;
+    color: #666666;
+}
+
+.check-box{
+    width: 69px;
+    height: 69px;
+    border-radius: 5px;
+    background: #EBEBEB;
+    box-shadow: solid 1px #E7E7E7;
+    margin-right: 25px;
+}
+
+.history{
+    width: 340px;
+    margin-left: 18px;
+    padding-top: 28px;
+}
+
+.history h1{
+    font-size: 23px;
+    font-family: 'Lexend Deca', sans-serif;
+    color:#126BA5; 
+    padding-bottom: 17px;
+}
+
+.history p {
+    font-size: 18px;
+    font-family: 'Lexend Deca', sans-serif;
+    line-height: 22px;
+    color: #666666; 
 }
