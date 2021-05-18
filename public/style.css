@@ -1,0 +1,215 @@
+body{
+    background: #E5E5E5;
+}
+
+.top-images{
+    width: 100%;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 68px;
+    margin-bottom: 32px;
+}
+
+.growth{
+    width: 200px;
+    height: 120px; 
+}
+
+.logo {
+    width: 160px;
+    height: 50px;
+}
+
+.log-in{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input{
+    width: 303px;
+    height: 45px;
+    border-radius: 5px;
+    border: solid 1px #D4D4D4;
+    margin-bottom: 6px;
+    padding-left: 10px;
+    font-size: 18px;
+    color:#DBDBDB;
+}
+
+.log-in button{
+    width: 315px;
+    height: 45px;
+    border-radius: 5px;
+    background: #52B6FF;
+    font-size: 20px;
+    color: #FFFFFF;
+    margin-bottom: 25px;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.log-in p{
+    color: #52B6FF;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.topbar{
+    width: 100%;
+    height: 70px;
+    background:#126BA5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow:  4px 4px rgba(0, 0, 0, 0.15);
+}
+
+.logo-name{
+    font-size: 38px;
+    font-family: 'Playball', cursive;
+    color: #ffffff;
+    margin-left: 16px;
+}
+
+.personal-picture{
+    width: 51px;
+    height: 51px;
+    border-radius: 50px;
+    margin-right: 18px;
+}
+
+.add-habits-bar{
+    width: 100%;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+
+.add-habits-bar p{
+    margin-left: 18px;
+    font-size: 23px;
+    font-family: 'Lexend Deca', sans-serif;
+    color:#126BA5;
+}
+
+.add-button{
+    width: 40px;
+    height: 35px;
+    background:#52B6FF;
+    margin-right: 18px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 27px;
+}
+
+.habits{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+}
+
+.habits p{
+    width: 340px;
+    font-size: 18px;
+    font-family: 'Lexend Deca', sans-serif;
+    line-height: 22px;
+    margin-left: 18px;
+    margin-right: 20px;
+    color: #666666; 
+}
+
+.bottombar{
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #ffffff;
+    font-family: 'Lexend Deca', sans-serif;
+    font-size: 18px;
+    color: #52B6FF;
+}
+
+.ball{
+    width: 90px;
+    height: 90px;
+    border-radius: 50px;
+    background: #52B6FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.new-habit{
+    width: 340px;
+    height: 180px;
+    border-radius: 5px;
+    background: #ffffff;
+    padding-top: 20px;
+    padding-left: 18px;
+    margin-bottom: 30px;
+}
+
+.week{
+    display: flex;
+    padding-bottom: 40px;
+}
+
+.week-day{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-right: 2px;
+    border: solid 1px #DBDBDB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lexend Deca', sans-serif;
+    color: #DBDBDB;
+}
+
+.cancel-button{
+    width: 84px;
+    height: 35px;
+    color:#52B6FF;
+    border-radius: 5px;
+    background: #ffffff;
+    font-size: 16px;
+    margin-right: 16px;
+    margin-left: 130px;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.save-button{
+    width: 84px;
+    height: 35px;
+    background:#52B6FF;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.all-habits{
+    width: 340px;
+    height: 90px;
+    background: #ffffff;
+    padding-left: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.each-habit p{
+    font-family: 'Lexend Deca', sans-serif;
+    color: #666666;
+    font-size: 20px;
+    padding-top: 13px;
+    padding-bottom: 10px;
+
+}
