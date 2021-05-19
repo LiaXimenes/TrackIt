@@ -2,59 +2,6 @@ body{
     background: #E5E5E5;
 }
 
-.top-images{
-    width: 100%;
-    height: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 68px;
-    margin-bottom: 32px;
-}
-
-.growth{
-    width: 200px;
-    height: 120px; 
-}
-
-.logo {
-    width: 160px;
-    height: 50px;
-}
-
-.log-in{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-input{
-    width: 303px;
-    height: 45px;
-    border-radius: 5px;
-    border: solid 1px #D4D4D4;
-    margin-bottom: 6px;
-    padding-left: 10px;
-    font-size: 18px;
-    color:#DBDBDB;
-}
-
-.log-in button{
-    width: 315px;
-    height: 45px;
-    border-radius: 5px;
-    background: #52B6FF;
-    font-size: 20px;
-    color: #FFFFFF;
-    margin-bottom: 25px;
-    font-family: 'Lexend Deca', sans-serif;
-}
-
-.log-in p{
-    color: #52B6FF;
-    font-family: 'Lexend Deca', sans-serif;
-}
-
 .topbar{
     width: 100%;
     height: 70px;
