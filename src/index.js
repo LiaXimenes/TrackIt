@@ -1,6 +1,10 @@
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Switch, Route} from "react-router-dom";
-import {useState, useContext} from "react";
+import {useState} from "react";
+
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
+import UserContext from './context/UserContext';
 
 
 import Login from "./components/Login.js";
@@ -10,8 +14,13 @@ import Habit from "./components/Habit.js";
 import History from "./components/History.js";
 
 function App(){
+    const [user, setUser] = useState(null);
+
+
+
     return(
         <>
+        <UserContext.Provider value={{user, setUser}}>
             <BrowserRouter> 
 			<Switch>
 				<Route path="/" exact>
@@ -31,6 +40,7 @@ function App(){
 				</Route>
 			</Switch>
 		    </BrowserRouter>
+        </UserContext.Provider>
         </>
      
     )

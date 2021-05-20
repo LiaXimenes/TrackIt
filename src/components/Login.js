@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
+
+import Loader from "react-loader-spinner";
+
+import UserContext from '../context/UserContext';
 
 
 export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const [charging, setCharging] = useState(false)
+
+    const {user, setUser} = useContext(UserContext);
+
     let history = useHistory();
 
     function onLogin(){
+        setCharging(true);
 
         const body = {
             email,
@@ -18,13 +27,8 @@ export default function Login(){
         }
 
         const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body)
-        request.then(() => goToHabits())
-        request.catch(() => alert("Ocorreu um Erro!"))
-
-
-        function goToHabits(){
-            history.push("/Today");
-        }
+        request.then((response) => {setUser(response.data); history.push("/Habit")});
+        request.catch(() => {alert("Ocorreu um erro!"); setCharging(false); setEmail(""); setPassword("")});
     }
 
     return( 
@@ -35,10 +39,10 @@ export default function Login(){
             </Top>
 
             <Inputs>
-                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email} />
-                <input type="text" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password}/>
+                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email} disabled = {charging}/>
+                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password} disabled = {charging}/>
 
-                <button onClick={onLogin}>Entrar</button>
+                <button onClick={onLogin}>{charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Entrar"}</button>
 
                 <Link to="/Register">
                     <p>Não tem conta? Cadastre-se</p>
@@ -88,7 +92,11 @@ const Inputs = styled.div`
         margin-bottom: 6px;
         padding-left: 10px;
         font-size: 18px;
-        color:black
+        color:black;
+        :disabled{
+            background-color: #f2f2f2 ;
+        }
+
     }
 
     button{

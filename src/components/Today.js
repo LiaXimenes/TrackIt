@@ -1,5 +1,6 @@
 import axios from 'axios';
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 export default function Today(){
     return(
@@ -37,11 +38,17 @@ export default function Today(){
             </TodaysHabits> 
 
             <Footer>
-                <p>Hábitos</p>
+                <Link to="/Habits">
+                    <p>Hábitos</p>
+                </Link>
+                
                 <Circle>
                 <p>Hoje</p>
                 </Circle>
-                <p>Histórico</p>
+                
+                <Link to="/History">
+                    <p>Histórico</p>
+                </Link>
             </Footer>
         </>
     )
@@ -55,6 +62,9 @@ const Navbar = styled.div`
     justify-content: space-between;
     align-items: center;
     box-shadow:  4px 4px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    left: 0;
+    top: 0;
 
     p{
         font-size: 38px;
@@ -73,7 +83,7 @@ const Navbar = styled.div`
 `;
 
 const Presentday = styled.div`
-    padding-top: 28px;
+    padding-top: 98px;
     margin-left: 18px;
     padding-bottom: 28px;
 
@@ -81,6 +91,7 @@ const Presentday = styled.div`
         font-size: 23px;
         font-family: 'Lexend Deca', sans-serif;
         color:#126BA5;
+        padding-bottom: 7px;
     }
     
     p{

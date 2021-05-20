@@ -43,7 +43,7 @@ export default function Register(){
 
             <Inputs>
                 <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email}/>
-                <input type="text" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password}/>
+                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password}/>
                 <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value = {name}/>
                 <input type="text" placeholder="foto" onChange={(e) => setImage(e.target.value)} value = {image}/>
 
