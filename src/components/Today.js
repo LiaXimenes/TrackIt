@@ -3,11 +3,21 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 import UserContext from '../context/UserContext';
+import ProgressContext from '../context/ProgressContext';
+
+import dayjs from 'dayjs';
+import "dayjs/locale/pt-br";
 
 export default function Today(){
     const {user} = useContext(UserContext);
-    const [arrayFromServer, setArrayFromServer ] = useState([]);
+    const {progress, setProgress} = useContext(ProgressContext);
+
+    const [sequence, setSequence] = useState("");
+    const [arrayFromServer, setArrayFromServer] = useState([]);
 
     const config = {
         headers: {
@@ -15,19 +25,42 @@ export default function Today(){
         }
     }
 
+    const body = {}
+
     useEffect(() => {
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
-        request.then((response) => {console.log(response.data); setArrayFromServer(response.data)});
-        request.catch(() => console.log("deu ruim"));
+        request.then((response) => {setArrayFromServer(response.data); setSequence(response.data.highestSequence)});
+        request.catch();
     }, [])
+
+    useEffect(() => {
+        const doneHabits = arrayFromServer.filter((item) => item.done);
+        setProgress(doneHabits);
+    }, [arrayFromServer] )
 
     function GetHabitArray(){
         const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
         req.then((response) => setArrayFromServer(response.data));
-        req.catch(() => console.log("deu bom nao"));
-        
+        req.catch();
     }       
 
+    function CheckIfDone({id, done}){
+        if (done === false){
+            AddCheckMark(id);
+        } else {DeleteCheckMark(id)}
+    }
+
+    function AddCheckMark(id){
+        const requestCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config)
+        requestCheckMark.then((response) => GetHabitArray());
+        requestCheckMark.catch();
+    }
+
+    function DeleteCheckMark(id){
+        const reqDelCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config)
+        reqDelCheckMark.then((response) => GetHabitArray());
+        reqDelCheckMark.catch();
+    }
 
     return(
         <>
@@ -37,8 +70,8 @@ export default function Today(){
             </Navbar>
 
             <Presentday>
-                <h1>Segunda, 17/5</h1>
-                <p>Nenhum hábito concluido ainda</p>
+                <h1>{dayjs().locale('pt-br').format("dddd, D/M")}</h1>
+                <p className = {(progress.length*100)/arrayFromServer.length !== 0 ? "changeColorMessage" : ""}>{(progress.length*100)/arrayFromServer.length === 0 ? "Nenhum hábito concluido ainda": `${(progress.length*100)/arrayFromServer.length}% dos Habitos concluídos`}</p>
             </Presentday>
 
             <TodaysHabits>
@@ -46,23 +79,28 @@ export default function Today(){
                     <Habit key = {item.id} >
                         <div>
                             <h1>{item.name}</h1>
-                            <p>Sequência atual:{item.currentSequence}</p>
-                            <p>Seu recorde: {item.highestSequence}</p>
+                            <p className={(item.done) === true ? "changeColorMessage" : ""}>Sequência atual:{item.currentSequence}</p>
+                            <p className={item.highestSequence !== 0 ? (item.highestSequence >=  item.currentSequence ? "changeColorMessage" : "") : ""}>Seu recorde: {item.highestSequence}</p>
                         </div>
 
-                        <Checkbox done = {item.done} onClick = {() => (item.done === false ? true : false)}></Checkbox>
+                        <Checkbox done = {item.done} onClick = {() => CheckIfDone(item)} className={(item.done) === true ? "changeColor" : ""}>{item.done === true ? ":)" : ":("}</Checkbox>
                     </Habit> 
                 )}
             </TodaysHabits> 
 
             <Footer>
-                <Link to="/Habits">
+                <Link to="/Habit">
                     <p>Hábitos</p>
                 </Link>
                 
-                <Circle>
-                <p>Hoje</p>
-                </Circle>
+                <Circle>            
+                    <CircularProgressbar strokeWidth={10} value={(progress.length*100)/arrayFromServer.length} text={"Hoje"} background={true} backgroundPadding={5} styles={buildStyles({
+                            textColor: '#fff',
+                            trailColor: '#52B6FF',
+                            backgroundColor: '#52B6FF',
+                            pathColor: '#fff',
+                        })} />
+                </Circle> 
                 
                 <Link to="/History">
                     <p>Histórico</p>
@@ -71,6 +109,7 @@ export default function Today(){
         </>
     )
 }
+
 
 const Navbar = styled.div`
     width: 100%;
@@ -116,6 +155,9 @@ const Presentday = styled.div`
         font-size: 18px;
         color: #bababa;
         font-family: 'Lexend Deca', sans-serif;
+        &.changeColorMessage{
+            color:#8FC549;
+        }
     }
 `;
 
@@ -147,6 +189,9 @@ const Habit = styled.li`
         font-size: 12px;
         font-family: 'Lexend Deca', sans-serif;
         color: #666666;
+        &.changeColorMessage{
+            color:#8FC549;
+        }
     }
 `;
 
@@ -154,9 +199,16 @@ const Checkbox = styled.button`
     width: 69px;
     height: 69px;
     border-radius: 5px;
-    background: ${props => (props.done === true ? "#8FC549" : "#EBEBEB")} ;
+    background: "#EBEBEB" ;
     box-shadow: solid 1px #E7E7E7;
     margin-right: 25px;
+    font-size: 50px;
+    color: #fff;
+
+    &.changeColor{
+        background: #8FC549;
+        
+    }
 `;
 
 const Footer = styled.div`
@@ -181,11 +233,4 @@ const Footer = styled.div`
 const Circle = styled.div`
     width: 90px;
     height: 90px;
-    border-radius: 50px;
-    background: #52B6FF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    margin-bottom: 30px;
 `;

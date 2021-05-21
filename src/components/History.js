@@ -4,6 +4,7 @@ import { useContext } from "react";
 
 import UserContext from '../context/UserContext';
 
+
 export default function History(){
     const {user} = useContext(UserContext);
 
@@ -23,17 +24,18 @@ export default function History(){
 
 
             <Footer>
-                <Link to="/Habits">
+                <Link to="/Habit">
                     <p>Hábitos</p>
                 </Link>
                 
-                <Circle>
-                <p>Hoje</p>
-                </Circle>
-                
-                <Link to="/History">
-                    <p>Histórico</p>
+                <Link to="/Today">                
+                <Circle>            
+                   <p>Hoje</p>
+                </Circle> 
                 </Link>
+                
+                <p>Histórico</p>
+
             </Footer>
       </>
     )
@@ -96,7 +98,7 @@ const Footer = styled.div`
     font-family: 'Lexend Deca', sans-serif;
     font-size: 18px;
     color: #52B6FF;
-    margin-top: 400px;
+    margin-top: 300px;
 
     a{ 
         text-decoration: none;
