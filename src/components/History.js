@@ -1,20 +1,25 @@
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+
+import UserContext from '../context/UserContext';
 
 export default function History(){
+    const {user} = useContext(UserContext);
+
     return(
         <>
             <Navbar >
                 <p>TrackIt</p>
-                <img src="catioro.jpg" />
+                <img src={user.image} alt="" />
             </Navbar>
 
             
-            <div class="history">
+            <Historic>
                 <h1>Histórico</h1>
 
                 <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
-            </div>
+            </Historic>
 
 
             <Footer>
@@ -59,7 +64,26 @@ const Navbar = styled.div`
         border-radius: 50px;
         margin-right: 18px;
     }
+`;
 
+const Historic = styled.div`
+    width: 340px;
+    margin-left: 18px;
+    padding-top: 98px;
+
+    h1{
+        font-size: 23px;
+        font-family: 'Lexend Deca', sans-serif;
+        color:#126BA5; 
+        padding-bottom: 17px;
+    }
+
+    p{
+        font-size: 18px;
+        font-family: 'Lexend Deca', sans-serif;
+        line-height: 22px;
+        color: #666666; 
+    }
 `;
 
 const Footer = styled.div`
@@ -72,6 +96,13 @@ const Footer = styled.div`
     font-family: 'Lexend Deca', sans-serif;
     font-size: 18px;
     color: #52B6FF;
+    margin-top: 400px;
+
+    a{ 
+        text-decoration: none;
+        color: #52B6FF;
+   
+    }
 `;
 
 const Circle = styled.div`

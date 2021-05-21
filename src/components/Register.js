@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
+import Loader from "react-loader-spinner";
 
 export default function Register(){
     const [email, setEmail] = useState("");
@@ -9,10 +10,13 @@ export default function Register(){
     const [name, setName] = useState("");
     const [image, setImage] = useState("");
 
+    const [charging, setCharging] = useState(false);
+
     let history = useHistory();
   
 
     function onRegister(){
+        setCharging(true);
 
         const body = {
             email,
@@ -23,7 +27,7 @@ export default function Register(){
 
         const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", body) 
         request.then(goToHabits);
-        request.catch(() => alert("Ocorreu um Erro!"));
+        request.catch(() => {alert("Ocorreu um Erro!"); setCharging(false); setEmail(""); setPassword(""); setName(""); setImage("")});
 
         function goToHabits(){
             history.push("/");
@@ -42,12 +46,12 @@ export default function Register(){
             </Top>
 
             <Inputs>
-                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email}/>
-                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password}/>
-                <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value = {name}/>
-                <input type="text" placeholder="foto" onChange={(e) => setImage(e.target.value)} value = {image}/>
+                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email} disabled = {charging}/>
+                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password} disabled = {charging}/>
+                <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value = {name} disabled = {charging}/>
+                <input type="text" placeholder="foto" onChange={(e) => setImage(e.target.value)} value = {image} disabled = {charging}/>
 
-                <button onClick={onRegister}>Cadastrar</button>
+                <button onClick={onRegister}> {charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Cadastrar"}</button>
 
                 <Link to="/">
                     <p>Já tem Cadastro? Faça o login!</p>
@@ -98,7 +102,10 @@ const Inputs = styled.div`
         margin-bottom: 6px;
         padding-left: 10px;
         font-size: 18px;
-        color:black
+        color:black;
+        :disabled{
+            background-color: #f2f2f2 ;
+        }
     }
 
     button{

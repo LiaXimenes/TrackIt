@@ -1,22 +1,25 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
+import Loader from "react-loader-spinner";
 
 import UserContext from '../context/UserContext';
 
 export default function Habit(){
     const {user} = useContext(UserContext);
     const [selectedDays, setSelectedDays] = useState([]);
+    const [nameOfTheHabit, setNameOfTheHabit] = useState("")
+    const [arrayOfHabits, setArrayOfHabits] = useState([]);
+    const [arrayFromServer, setArrayFromServer ] = useState([]);
+
+    const [charging, setCharging] = useState(false);
 
     const [isSelected, setIsSelecte] = useState(false);
 
-    console.log(user)
-    
-
     const body = {
-        // name: "Nome do hábito",
-        // days: [1, 3, 5] // segunda, quarta e sexta
+        name: nameOfTheHabit,
+        days: selectedDays
     }
 
     const config = {
@@ -24,12 +27,38 @@ export default function Habit(){
             "Authorization": `Bearer ${user.token}`
         }
     }
+    
+    useEffect(() => {
+        const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        req.then((response) => {setArrayFromServer(response.data); console.log(response.data)});
+        req.catch(() => console.log("deu bom nao"));
+    }, [])
 
-    function DeusMeSalva(){
-        const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config)
-        request.then(() => console.log("deu bom"))
-        request.catch(() => console.log("deu ruim"))
 
+    function GetHabitArray(){
+        const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        req.then((response) => setArrayFromServer(response.data));
+        req.catch(() => console.log("deu bom nao"));
+        
+    }       
+    
+
+    function PostNewHabit(){
+        setCharging(true);
+
+        const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+        request.then(() => {setArrayOfHabits([...arrayOfHabits, nameOfTheHabit]); setIsSelecte(false); setNameOfTheHabit(""); GetHabitArray(); setCharging(false)});
+        request.catch(() => console.log("deu ruim"));
+
+    }
+
+    function DeleteHabit(id){
+        const ask = window.confirm("Deseja deletar permanentemente esse Habito?");
+        if(ask) {
+            const reqDelete = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config);
+            reqDelete.then(() => {GetHabitArray()})
+        }
+        
     }
 
     function AddDays(day){
@@ -40,14 +69,12 @@ export default function Habit(){
             setSelectedDays([...selectedDays,day])
         }
     }
-    console.log(selectedDays)
-
     
     return(
         <>
             <Navbar>
                 <p>TrackIt</p>
-                <img src={user.image} />
+                <img src={user.image} alt=""/>
             </Navbar>
 
             <AddHabits>
@@ -58,43 +85,48 @@ export default function Habit(){
           
             <Habits>
                 <NewHabits show = {isSelected}>
-                    <input type="text" placeholder="Nome do Hábito" />
+                    <input type="text" placeholder="Nome do Hábito" onChange = {(e) => setNameOfTheHabit(e.target.value)} value={nameOfTheHabit} disabled = {charging}/>
 
                     <Week>
-                        <li onClick={() => AddDays(7)} id={7}>D</li>
-                        <li onClick={() => AddDays(1)} id={1}>S</li>
-                        <li onClick={() => AddDays(2)} id={2}>T</li>
-                        <li onClick={() => AddDays(3)} id={3}>Q</li>
-                        <li onClick={() => AddDays(4)} id={4}>Q</li>
-                        <li onClick={() => AddDays(5)} id={5}>S</li>
-                        <li onClick={() => AddDays(6)} id={6}>S</li>
+                        <li className={selectedDays.includes(7) ? "changeColor" : ""} onClick={() => AddDays(7)} id={7}>D</li>
+                        <li className={selectedDays.includes(1) ? "changeColor" : ""} onClick={() => AddDays(1)} id={1}>S</li>
+                        <li className={selectedDays.includes(2) ? "changeColor" : ""} onClick={() => AddDays(2)} id={2}>T</li>
+                        <li className={selectedDays.includes(3) ? "changeColor" : ""} onClick={() => AddDays(3)} id={3}>Q</li>
+                        <li className={selectedDays.includes(4) ? "changeColor" : ""} onClick={() => AddDays(4)} id={4}>Q</li>
+                        <li className={selectedDays.includes(5) ? "changeColor" : ""} onClick={() => AddDays(5)} id={5}>S</li>
+                        <li className={selectedDays.includes(6) ? "changeColor" : ""} onClick={() => AddDays(6)} id={6}>S</li>
                     </Week>
 
                     <div class="save-cancel-button">
-                        <CancelButton onClick={() => setIsSelecte(false)}>Cancelar</CancelButton>
-                        <SaveButton onClick={DeusMeSalva}>Salvar</SaveButton>
+                        <CancelButton onClick={() => {setIsSelecte(false); setNameOfTheHabit("")}}>Cancelar</CancelButton>
+                        <SaveButton onClick={PostNewHabit}>{charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Salvar"}</SaveButton>
                     </div>
                 </NewHabits>
             </Habits>
 
             <Habits>
-                <EachHabit>
-                    <p>Nome do Habito</p>
-                    <Week>
-                        <li id={7}>D</li>
-                        <li id={1}>S</li>
-                        <li id={2}>T</li>
-                        <li id={3}>Q</li>
-                        <li id={4}>Q</li>
-                        <li id={5}>S</li>
-                        <li id={6}>S</li>
-                    </Week>
-                </EachHabit>  
+                {arrayFromServer.map(item => 
+                    <EachHabit>
+                        <NameAndTrash>
+                        <p key={item.id}>{item.name}</p>
+                        <button onClick = {() => DeleteHabit(item.id)}><img src="trash-bin.png" alt=""/></button>
+                        </NameAndTrash>
+                        <Week>
+                            <li className={item.days.includes(7) ? "changeColor" : ""} id={7}>D</li>
+                            <li className={item.days.includes(1) ? "changeColor" : ""} id={1}>S</li>
+                            <li className={item.days.includes(2) ? "changeColor" : ""} id={2}>T</li>
+                            <li className={item.days.includes(3) ? "changeColor" : ""} id={3}>Q</li>
+                            <li className={item.days.includes(4) ? "changeColor" : ""} id={4}>Q</li>
+                            <li className={item.days.includes(5) ? "changeColor" : ""} id={5}>S</li>
+                            <li className={item.days.includes(6) ? "changeColor" : ""} id={6}>S</li>
+                        </Week>
+                    </EachHabit>  
+                )}
             </Habits>
 
-            <Habits>
+            <NoHabistMessage show = {isSelected} arrayOfHabits = {arrayOfHabits.length}>
                 <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
-            </Habits>
+            </NoHabistMessage>
 
             <Footer>
                 <Link to="/Habits">
@@ -185,7 +217,10 @@ const NewHabits = styled.div`
         margin-bottom: 6px;
         padding-left: 10px;
         font-size: 18px;
-        color:black
+        color:black;
+        :disabled{
+            background-color: #f2f2f2 ;
+        }
     }
 `;
 
@@ -209,6 +244,25 @@ const CancelButton = styled.button`
     margin-right: 16px;
     margin-left: 130px;
     font-family: 'Lexend Deca', sans-serif;
+`;
+
+const NoHabistMessage = styled.div`
+    display: ${props => (props.show === true ? "none" : "flex" || props.arrayOfHabits !== 0 ? "flex" : "none")};
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+
+    p{
+        width: 340px;
+        font-size: 18px;
+        font-family: 'Lexend Deca', sans-serif;
+        line-height: 22px;
+        margin-left: 18px;
+        margin-right: 20px;
+        color: #666666; 
+
+    }
+
 `;
 
 const Habits = styled.div`
@@ -245,6 +299,22 @@ const EachHabit = styled.div`
     }
 `;
 
+const NameAndTrash = styled.div`
+    display: flex;
+
+    button{
+        margin-right: 10px;
+        margin-top: 10px;
+        background: #fff;
+    }
+
+    img{
+        width: 15px;
+        height: 15px;
+    }
+
+
+`
 
 const Week = styled.ul`
     display: flex;
@@ -261,6 +331,10 @@ const Week = styled.ul`
         align-items: center;
         font-family: 'Lexend Deca', sans-serif;
         color: #DBDBDB;
+        &.changeColor{
+            background: #cfcfcf;
+            color: #fff
+        }
 
     }
 `;
@@ -275,6 +349,13 @@ const Footer = styled.div`
     font-family: 'Lexend Deca', sans-serif;
     font-size: 18px;
     color: #52B6FF;
+    margin-top: 50px;
+
+    a{ 
+        text-decoration: none;
+        color: #52B6FF;
+   
+    }
 `;
 
 const Circle = styled.div`

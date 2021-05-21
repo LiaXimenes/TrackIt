@@ -6,6 +6,8 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import UserContext from './context/UserContext';
 
+import "./css/reset.css";
+
 
 import Login from "./components/Login.js";
 import Register from "./components/Register.js";

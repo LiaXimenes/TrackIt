@@ -1,13 +1,39 @@
 import axios from 'axios';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+
+import UserContext from '../context/UserContext';
 
 export default function Today(){
+    const {user} = useContext(UserContext);
+    const [arrayFromServer, setArrayFromServer ] = useState([]);
+
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${user.token}`
+        }
+    }
+
+    useEffect(() => {
+        const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
+        request.then((response) => {console.log(response.data); setArrayFromServer(response.data)});
+        request.catch(() => console.log("deu ruim"));
+    }, [])
+
+    function GetHabitArray(){
+        const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
+        req.then((response) => setArrayFromServer(response.data));
+        req.catch(() => console.log("deu bom nao"));
+        
+    }       
+
+
     return(
         <>
             <Navbar >
                 <p>TrackIt</p>
-                <img src="catioro.jpg" />
+                <img src={user.image} alt="" />
             </Navbar>
 
             <Presentday>
@@ -16,25 +42,17 @@ export default function Today(){
             </Presentday>
 
             <TodaysHabits>
-                <Habit >
-                <div>
-                    <h1>Nome do hábito</h1>
-                    <p>Sequência atual: add número</p>
-                    <p>Seu recorde: add número</p>
-                </div>
+                {arrayFromServer.map(item => 
+                    <Habit key = {item.id} >
+                        <div>
+                            <h1>{item.name}</h1>
+                            <p>Sequência atual:{item.currentSequence}</p>
+                            <p>Seu recorde: {item.highestSequence}</p>
+                        </div>
 
-                <Checkbox></Checkbox>
-                </Habit>
-
-                <Habit >
-                <div>
-                    <h1>Nome do hábito</h1>
-                    <p>Sequência atual: add número</p>
-                    <p>Seu recorde: add número</p>
-                </div>
-
-                <Checkbox></Checkbox>
-                </Habit>
+                        <Checkbox done = {item.done} onClick = {() => (item.done === false ? true : false)}></Checkbox>
+                    </Habit> 
+                )}
             </TodaysHabits> 
 
             <Footer>
@@ -132,11 +150,11 @@ const Habit = styled.li`
     }
 `;
 
-const Checkbox = styled.div`
+const Checkbox = styled.button`
     width: 69px;
     height: 69px;
     border-radius: 5px;
-    background: #EBEBEB;
+    background: ${props => (props.done === true ? "#8FC549" : "#EBEBEB")} ;
     box-shadow: solid 1px #E7E7E7;
     margin-right: 25px;
 `;
@@ -151,6 +169,13 @@ const Footer = styled.div`
     font-family: 'Lexend Deca', sans-serif;
     font-size: 18px;
     color: #52B6FF;
+    margin-top: 50px;
+
+    a{ 
+        text-decoration: none;
+        color: #52B6FF;
+   
+    }
 `;
 
 const Circle = styled.div`
