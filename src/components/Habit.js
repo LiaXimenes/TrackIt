@@ -10,14 +10,14 @@ import 'react-circular-progressbar/dist/styles.css';
 import UserContext from '../context/UserContext';
 import ProgressContext from '../context/ProgressContext';
 
-export default function Habit(){
-    const {user} = useContext(UserContext);
-    const {progress} = useContext(ProgressContext);
+export default function Habit() {
+    const { user } = useContext(UserContext);
+    const { progress } = useContext(ProgressContext);
 
     const [selectedDays, setSelectedDays] = useState([]);
     const [nameOfTheHabit, setNameOfTheHabit] = useState("")
     const [arrayOfHabits, setArrayOfHabits] = useState([]);
-    const [arrayFromServer, setArrayFromServer ] = useState([]);
+    const [arrayFromServer, setArrayFromServer] = useState([]);
 
     const [charging, setCharging] = useState(false);
 
@@ -33,52 +33,52 @@ export default function Habit(){
             "Authorization": `Bearer ${user.token}`
         }
     }
-    
+
     useEffect(() => {
         const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
         req.then((response) => setArrayFromServer(response.data));
         req.catch();
     }, [])
 
-    function GetHabitArray(){
+    function GetHabitArray() {
         const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
         req.then((response) => setArrayFromServer(response.data));
         req.catch();
-        
-    }       
-    
-    function PostNewHabit(){
+
+    }
+
+    function PostNewHabit() {
         setCharging(true);
 
         const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
-        request.then(() => {setArrayOfHabits([...arrayOfHabits, nameOfTheHabit]); setIsSelecte(false); setNameOfTheHabit(""); setSelectedDays([]); GetHabitArray(); setCharging(false)});
+        request.then(() => { setArrayOfHabits([...arrayOfHabits, nameOfTheHabit]); setIsSelecte(false); setNameOfTheHabit(""); setSelectedDays([]); GetHabitArray(); setCharging(false) });
         request.catch(() => alert("Ocorreu um erro!"));
 
     }
 
-    function DeleteHabit(id){
+    function DeleteHabit(id) {
         const ask = window.confirm("Deseja deletar permanentemente esse Habito?");
-        if(ask) {
+        if (ask) {
             const reqDelete = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config);
-            reqDelete.then(() => {GetHabitArray()})
+            reqDelete.then(() => { GetHabitArray() })
         }
-        
+
     }
 
-    function AddDays(day){
-        if(selectedDays.includes(day)){
+    function AddDays(day) {
+        if (selectedDays.includes(day)) {
             const newSelectedDays = selectedDays.filter(item => item !== day)
             setSelectedDays([...newSelectedDays]);
-        } else{
-            setSelectedDays([...selectedDays,day])
+        } else {
+            setSelectedDays([...selectedDays, day])
         }
     }
-    
-    return(
+
+    return (
         <>
             <Navbar>
                 <p>TrackIt</p>
-                <img src={user.image} alt=""/>
+                <img src={user.image} alt="" />
             </Navbar>
 
             <AddHabits>
@@ -86,34 +86,34 @@ export default function Habit(){
                 <button onClick={() => setIsSelecte(true)}>+</button>
             </AddHabits>
 
-          
+
             <Habits>
-                <NewHabits show = {isSelected}>
-                    <input type="text" placeholder="Nome do Hábito" onChange = {(e) => setNameOfTheHabit(e.target.value)} value={nameOfTheHabit} disabled = {charging}/>
+                <NewHabits show={isSelected}>
+                    <input type="text" placeholder="Nome do Hábito" onChange={(e) => setNameOfTheHabit(e.target.value)} value={nameOfTheHabit} disabled={charging} />
 
                     <Week>
-                        <li className={selectedDays.includes(7) ? "changeColor" : ""} onClick={() => AddDays(7)} id={7} disabled = {charging}>D</li>
-                        <li className={selectedDays.includes(1) ? "changeColor" : ""} onClick={() => AddDays(1)} id={1} disabled = {charging}>S</li>
-                        <li className={selectedDays.includes(2) ? "changeColor" : ""} onClick={() => AddDays(2)} id={2} disabled = {charging}>T</li>
-                        <li className={selectedDays.includes(3) ? "changeColor" : ""} onClick={() => AddDays(3)} id={3} disabled = {charging}>Q</li>
-                        <li className={selectedDays.includes(4) ? "changeColor" : ""} onClick={() => AddDays(4)} id={4} disabled = {charging}>Q</li>
-                        <li className={selectedDays.includes(5) ? "changeColor" : ""} onClick={() => AddDays(5)} id={5} disabled = {charging}>S</li>
-                        <li className={selectedDays.includes(6) ? "changeColor" : ""} onClick={() => AddDays(6)} id={6} disabled = {charging}>S</li>
+                        <li className={selectedDays.includes(7) ? "changeColor" : ""} onClick={() => AddDays(7)} id={7} disabled={charging}>D</li>
+                        <li className={selectedDays.includes(1) ? "changeColor" : ""} onClick={() => AddDays(1)} id={1} disabled={charging}>S</li>
+                        <li className={selectedDays.includes(2) ? "changeColor" : ""} onClick={() => AddDays(2)} id={2} disabled={charging}>T</li>
+                        <li className={selectedDays.includes(3) ? "changeColor" : ""} onClick={() => AddDays(3)} id={3} disabled={charging}>Q</li>
+                        <li className={selectedDays.includes(4) ? "changeColor" : ""} onClick={() => AddDays(4)} id={4} disabled={charging}>Q</li>
+                        <li className={selectedDays.includes(5) ? "changeColor" : ""} onClick={() => AddDays(5)} id={5} disabled={charging}>S</li>
+                        <li className={selectedDays.includes(6) ? "changeColor" : ""} onClick={() => AddDays(6)} id={6} disabled={charging}>S</li>
                     </Week>
 
                     <div class="save-cancel-button">
-                        <CancelButton onClick={() => {setIsSelecte(false)}}>Cancelar</CancelButton>
+                        <CancelButton onClick={() => { setIsSelecte(false) }}>Cancelar</CancelButton>
                         <SaveButton onClick={PostNewHabit}>{charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Salvar"}</SaveButton>
                     </div>
                 </NewHabits>
             </Habits>
 
             <Habits>
-                {arrayFromServer.map(item => 
+                {arrayFromServer.map(item =>
                     <EachHabit>
                         <NameAndTrash>
-                        <p key={item.id}>{item.name}</p>
-                        <button onClick = {() => DeleteHabit(item.id)}><img src="trash-bin.png" alt=""/></button>
+                            <p key={item.id}>{item.name}</p>
+                            <button onClick={() => DeleteHabit(item.id)}><img src="trash-bin.png" alt="" /></button>
                         </NameAndTrash>
                         <Week>
                             <li className={item.days.includes(7) ? "changeColor" : ""} id={7}>D</li>
@@ -124,33 +124,33 @@ export default function Habit(){
                             <li className={item.days.includes(5) ? "changeColor" : ""} id={5}>S</li>
                             <li className={item.days.includes(6) ? "changeColor" : ""} id={6}>S</li>
                         </Week>
-                    </EachHabit>  
+                    </EachHabit>
                 )}
             </Habits>
 
-            <NoHabistMessage show = {isSelected} arrayFromServer = {arrayFromServer.length}>
+            <NoHabistMessage show={isSelected} arrayFromServer={arrayFromServer.length}>
                 <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
             </NoHabistMessage>
 
             <Footer>
                 <p>Hábitos</p>
 
-                <Link to="/Today">         
-                <Circle>            
-                    <CircularProgressbar strokeWidth={10} value={(progress.length*100)/arrayFromServer.length} text={"Hoje"} background={true} backgroundPadding={5} styles={buildStyles({
+                <Link to="/Today">
+                    <Circle>
+                        <CircularProgressbar strokeWidth={10} value={(progress.length * 100) / arrayFromServer.length} text={"Hoje"} background={true} backgroundPadding={5} styles={buildStyles({
                             textColor: '#fff',
                             trailColor: '#52B6FF',
                             backgroundColor: '#52B6FF',
                             pathColor: '#fff',
                         })} />
-                </Circle> 
+                    </Circle>
                 </Link>
-                
+
                 <Link to="/History">
                     <p>Histórico</p>
                 </Link>
             </Footer>
-      </>
+        </>
     )
 }
 
@@ -268,10 +268,8 @@ const NoHabistMessage = styled.div`
         line-height: 22px;
         margin-left: 18px;
         margin-right: 20px;
-        color: #666666; 
-
+        color: #666666;
     }
-
 `;
 
 const Habits = styled.div`
@@ -321,9 +319,7 @@ const NameAndTrash = styled.div`
         width: 15px;
         height: 15px;
     }
-
-
-`
+`;
 
 const Week = styled.ul`
     display: flex;
@@ -344,7 +340,6 @@ const Week = styled.ul`
             background: #cfcfcf;
             color: #fff
         }
-
     }
 `;
 

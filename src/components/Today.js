@@ -12,11 +12,10 @@ import ProgressContext from '../context/ProgressContext';
 import dayjs from 'dayjs';
 import "dayjs/locale/pt-br";
 
-export default function Today(){
-    const {user} = useContext(UserContext);
-    const {progress, setProgress} = useContext(ProgressContext);
+export default function Today() {
+    const { user } = useContext(UserContext);
+    const { progress, setProgress } = useContext(ProgressContext);
 
-    const [sequence, setSequence] = useState("");
     const [arrayFromServer, setArrayFromServer] = useState([]);
 
     const config = {
@@ -29,40 +28,40 @@ export default function Today(){
 
     useEffect(() => {
         const request = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
-        request.then((response) => {setArrayFromServer(response.data); setSequence(response.data.highestSequence)});
+        request.then((response) => setArrayFromServer(response.data));
         request.catch();
     }, [])
 
     useEffect(() => {
         const doneHabits = arrayFromServer.filter((item) => item.done);
         setProgress(doneHabits);
-    }, [arrayFromServer] )
+    }, [arrayFromServer])
 
-    function GetHabitArray(){
+    function GetHabitArray() {
         const req = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
         req.then((response) => setArrayFromServer(response.data));
         req.catch();
-    }       
-
-    function CheckIfDone({id, done}){
-        if (done === false){
-            AddCheckMark(id);
-        } else {DeleteCheckMark(id)}
     }
 
-    function AddCheckMark(id){
+    function CheckIfDone({ id, done }) {
+        if (done === false) {
+            AddCheckMark(id);
+        } else { DeleteCheckMark(id) }
+    }
+
+    function AddCheckMark(id) {
         const requestCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config)
         requestCheckMark.then((response) => GetHabitArray());
         requestCheckMark.catch();
     }
 
-    function DeleteCheckMark(id){
+    function DeleteCheckMark(id) {
         const reqDelCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config)
         reqDelCheckMark.then((response) => GetHabitArray());
         reqDelCheckMark.catch();
     }
 
-    return(
+    return (
         <>
             <Navbar >
                 <p>TrackIt</p>
@@ -71,37 +70,42 @@ export default function Today(){
 
             <Presentday>
                 <h1>{dayjs().locale('pt-br').format("dddd, D/M")}</h1>
-                <p className = {(progress.length*100)/arrayFromServer.length !== 0 ? "changeColorMessage" : ""}>{(progress.length*100)/arrayFromServer.length === 0 ? "Nenhum hábito concluido ainda": `${(progress.length*100)/arrayFromServer.length}% dos Habitos concluídos`}</p>
+                {arrayFromServer.length > 0 ?
+                    <p className={(progress.length * 100) / arrayFromServer.length > 0 ? "changeColorMessage" : ""}>{(progress.length * 100) / arrayFromServer.length === 0 ? "Nenhum hábito concluido ainda" : `${(progress.length * 100) / arrayFromServer.length}% dos Habitos concluídos`}</p>
+                    :
+                    <p>Você não tem nenhum habito cadastrado hoje. Cadastre algo!</p>
+                }
+
             </Presentday>
 
             <TodaysHabits>
-                {arrayFromServer.map(item => 
-                    <Habit key = {item.id} >
+                {arrayFromServer.map(item =>
+                    <Habit key={item.id} >
                         <div>
                             <h1>{item.name}</h1>
                             <p className={(item.done) === true ? "changeColorMessage" : ""}>Sequência atual:{item.currentSequence}</p>
-                            <p className={item.highestSequence !== 0 ? (item.highestSequence >=  item.currentSequence ? "changeColorMessage" : "") : ""}>Seu recorde: {item.highestSequence}</p>
+                            <p className={item.highestSequence !== 0 ? (item.highestSequence >= item.currentSequence ? "changeColorMessage" : "") : ""}>Seu recorde: {item.highestSequence}</p>
                         </div>
 
-                        <Checkbox done = {item.done} onClick = {() => CheckIfDone(item)} className={(item.done) === true ? "changeColor" : ""}>{item.done === true ? ":)" : ":("}</Checkbox>
-                    </Habit> 
+                        <Checkbox done={item.done} onClick={() => CheckIfDone(item)} className={(item.done) === true ? "changeColor" : ""}>{item.done === true ? ":)" : ":("}</Checkbox>
+                    </Habit>
                 )}
-            </TodaysHabits> 
+            </TodaysHabits>
 
             <Footer>
                 <Link to="/Habit">
                     <p>Hábitos</p>
                 </Link>
-                
-                <Circle>            
-                    <CircularProgressbar strokeWidth={10} value={(progress.length*100)/arrayFromServer.length} text={"Hoje"} background={true} backgroundPadding={5} styles={buildStyles({
-                            textColor: '#fff',
-                            trailColor: '#52B6FF',
-                            backgroundColor: '#52B6FF',
-                            pathColor: '#fff',
-                        })} />
-                </Circle> 
-                
+
+                <Circle>
+                    <CircularProgressbar strokeWidth={10} value={(progress.length * 100) / arrayFromServer.length} text={"Hoje"} background={true} backgroundPadding={5} styles={buildStyles({
+                        textColor: '#fff',
+                        trailColor: '#52B6FF',
+                        backgroundColor: '#52B6FF',
+                        pathColor: '#fff',
+                    })} />
+                </Circle>
+
                 <Link to="/History">
                     <p>Histórico</p>
                 </Link>

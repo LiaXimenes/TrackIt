@@ -7,16 +7,16 @@ import Loader from "react-loader-spinner";
 import UserContext from '../context/UserContext';
 
 
-export default function Login(){
+export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [charging, setCharging] = useState(false);
 
-    const {setUser} = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
 
-    let history = useHistory();
+    const history = useHistory();
 
-    function onLogin(){
+    function onLogin() {
         setCharging(true);
 
         const body = {
@@ -25,27 +25,29 @@ export default function Login(){
         }
 
         const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body)
-        request.then((response) => {setUser(response.data); history.push("/Today")});
-        request.catch(() => {alert("Ocorreu um erro!"); setCharging(false); setEmail(""); setPassword("")});
+        request.then((response) => { setUser(response.data); history.push("/Today") });
+        request.catch(() => { alert("Ocorreu um erro!"); setCharging(false); setEmail(""); setPassword("") });
     }
 
-    return( 
+    return (
         <Whitebody>
             <Top>
                 <Growth src="plant-growth.jpg" />
-                <Logo src="TrackIt.png" />
+                <div>
+                    <Logo>TrackIt</Logo>
+                </div>
             </Top>
 
             <Inputs>
-                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email} disabled = {charging}/>
-                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password} disabled = {charging}/>
+                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email} disabled={charging} />
+                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value={password} disabled={charging} />
 
                 <button onClick={onLogin}>{charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Entrar"}</button>
 
                 <Link to="/Register">
                     <p>Não tem conta? Cadastre-se</p>
                 </Link>
-                
+
             </Inputs>
         </Whitebody>
     )
@@ -72,9 +74,10 @@ const Growth = styled.img`
     height: 120px; 
 `;
 
-const Logo = styled.img`
-    width: 160px;
-    height: 50px;
+const Logo = styled.p`
+    font-size: 70px;
+    font-family: 'Playball', cursive;
+    color: #126BA5;
 `;
 
 const Inputs = styled.div`

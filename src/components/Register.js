@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Loader from "react-loader-spinner";
 
-export default function Register(){
+export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -12,10 +12,10 @@ export default function Register(){
 
     const [charging, setCharging] = useState(false);
 
-    let history = useHistory();
-  
+    const history = useHistory();
 
-    function onRegister(){
+
+    function onRegister() {
         setCharging(true);
 
         const body = {
@@ -25,20 +25,17 @@ export default function Register(){
             password
         }
 
-        const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", body) 
+        const request = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", body)
         request.then(goToHabits);
-        request.catch(() => {alert("Ocorreu um Erro!"); setCharging(false); setEmail(""); setPassword(""); setName(""); setImage("")});
+        request.catch(() => { alert("Ocorreu um Erro!"); setCharging(false); setEmail(""); setPassword(""); setName(""); setImage("") });
 
-        function goToHabits(){
+        function goToHabits() {
             history.push("/");
         }
     }
 
 
-
-
-
-    return(
+    return (
         <Whitebody>
             <Top>
                 <Growth src="plant-growth.jpg" />
@@ -46,19 +43,19 @@ export default function Register(){
             </Top>
 
             <Inputs>
-                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value = {email} disabled = {charging}/>
-                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value = {password} disabled = {charging}/>
-                <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value = {name} disabled = {charging}/>
-                <input type="text" placeholder="foto" onChange={(e) => setImage(e.target.value)} value = {image} disabled = {charging}/>
+                <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email} disabled={charging} />
+                <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value={password} disabled={charging} />
+                <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value={name} disabled={charging} />
+                <input type="text" placeholder="foto" onChange={(e) => setImage(e.target.value)} value={image} disabled={charging} />
 
                 <button onClick={onRegister}> {charging === true ? <Loader type="ThreeDots" color="#fff" height={45} width={60} /> : "Cadastrar"}</button>
 
                 <Link to="/">
                     <p>Já tem Cadastro? Faça o login!</p>
                 </Link>
-                
+
             </Inputs>
-      </Whitebody>
+        </Whitebody>
     )
 
 }
@@ -67,7 +64,7 @@ const Whitebody = styled.div`
     width: 100%;
     height: 700px;
     background: #ffffff;
-`
+`;
 
 const Top = styled.div`
     width: 100%;
@@ -123,5 +120,4 @@ const Inputs = styled.div`
         color: #52B6FF;
         font-family: 'Lexend Deca', sans-serif;
     }
-
 `;
