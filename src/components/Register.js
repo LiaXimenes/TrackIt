@@ -83,9 +83,10 @@ const Growth = styled.img`
     height: 120px; 
 `;
 
-const Logo = styled.img`
-    width: 160px;
-    height: 50px;
+const Logo = styled.p`
+    font-size: 70px;
+    font-family: 'Playball', cursive;
+    color: #126BA5;
 `;
 
 const Inputs = styled.div`
