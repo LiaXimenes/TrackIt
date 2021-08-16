@@ -39,7 +39,9 @@ export default function Register() {
         <Whitebody>
             <Top>
                 <Growth src="plant-growth.jpg" />
-                <Logo src="TrackIt.png" />
+                <div>
+                    <Logo>TrackIt</Logo>
+                </div>
             </Top>
 
             <Inputs>

@@ -51,13 +51,13 @@ export default function Today() {
 
     function AddCheckMark(id) {
         const requestCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, body, config)
-        requestCheckMark.then((response) => GetHabitArray());
+        requestCheckMark.then(() => GetHabitArray());
         requestCheckMark.catch();
     }
 
     function DeleteCheckMark(id) {
         const reqDelCheckMark = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, body, config)
-        reqDelCheckMark.then((response) => GetHabitArray());
+        reqDelCheckMark.then(() => GetHabitArray());
         reqDelCheckMark.catch();
     }
 
